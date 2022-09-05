@@ -10,7 +10,8 @@ sudo chown -R nexus:nexus /opt/nexus
 sudo chown -R nexus:nexus /opt/sonatype-work
 sudo echo "#run_as_user="nexus" > /opt/nexus/bin/nexus.rc
 sed -i 's/2703/512/g' /opt/nexus/bin/nexus.vmoptions
-sudo echo "[Unit]
+cat <<EOF > /etc/systemd/system/nexus.service
+[Unit]
 Description=nexus service
 After=network.target
 
@@ -24,6 +25,7 @@ ExecStop=/opt/nexus/bin/nexus stop
 User=nexus
 Restart=on-abort
 [Install]
-WantedBy=multi-user.target" >> /etc/systemd/system/nexus.service
+WantedBy=multi-user.target
+EOF
 sudo systemctl enable nexus
 sudo systemctl start nexus
